@@ -71,14 +71,13 @@ export default async function ProfilePage() {
 
   // 3️⃣ Compose server-side view model
   const viewModel: ProfileViewModel = {
-    ...profile,
-
-    userIdentity: {
-      firstName: user.firstName,
-      lastName: user.lastName,
-      dateOfBirth: user.dateOfBirth,
-    },
-  }
+  ...profile,
+  userIdentity: {
+    firstName: user.firstName ?? '',
+    lastName: user.lastName ?? '',
+    dateOfBirth: user.dateOfBirth ?? undefined,
+  },
+}
 
   // 4️⃣ Render
   return (
