@@ -15,7 +15,7 @@ import {
   Shield,
 } from 'lucide-react'
 
-import type { UserIdentity } from '../../../app/lib/types/userIdentity'
+import type { UserIdentity } from '../../app/lib/types/userIdentity'
 import { useEffect } from 'react'
 import { createPortal } from 'react-dom'
 
