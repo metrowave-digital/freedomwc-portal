@@ -3,16 +3,16 @@
 import styles from './Profile.module.css'
 import ProfileClient from './profile-client'
 
-import { getUser } from '../../app/lib/auth/getUser'
-import { getOrCreateMyProfile } from '../../app/lib/profile'
+import { getUser } from '../../lib/auth/getUser'
+import { getOrCreateMyProfile } from '../../lib/profile'
 
 import type {
   Profile,
   PayloadRelation,
   PayloadUpload,
-} from '../../app/lib/payload'
+} from '../../lib/payload'
 
-import type { UserIdentity } from '../../app/lib/types/userIdentity'
+import type { UserIdentity } from '../../lib/types/userIdentity'
 
 /* =======================
    Local View Types

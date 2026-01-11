@@ -21,8 +21,9 @@ import {
 export default function PortalViewSwitcher({
   user,
 }: {
-  user: WebUser
+  user: WebUser | null
 }) {
+  // ✅ Safe even when user is null
   const allowedViews = getAllowedViews(user)
 
   // ✅ Hydration-safe active view
@@ -34,6 +35,7 @@ export default function PortalViewSwitcher({
 
   const [open, setOpen] = useState(false)
 
+  // 🔒 Nothing to switch if only one view
   if (allowedViews.length <= 1) return null
 
   return (
@@ -63,7 +65,7 @@ export default function PortalViewSwitcher({
                     }
                     onClick={() => {
                       setActiveView(view)
-                      emitChange() // 🔔 notify subscribers
+                      emitChange()
                       setOpen(false)
                     }}
                   >
@@ -80,7 +82,7 @@ export default function PortalViewSwitcher({
                 className={styles.reset}
                 onClick={() => {
                   clearActiveView()
-                  emitChange() // 🔔 notify subscribers
+                  emitChange()
                   setOpen(false)
                 }}
               >

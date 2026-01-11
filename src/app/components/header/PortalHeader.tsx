@@ -97,7 +97,7 @@ export default function PortalHeader({ user }: { user: WebUser }) {
 
           {/* Profile avatar */}
           <Link
-            href="/portal/profile"
+            href="/profile"
             className={styles.profileLink}
           >
             <div className={styles.avatar}>

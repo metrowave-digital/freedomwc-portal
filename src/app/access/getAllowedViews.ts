@@ -5,15 +5,23 @@ import type { ViewRole } from "./viewRoles"
 import { VIEW_MATRIX } from "./viewMatrix"
 
 export function getAllowedViews(
-  user: WebUser,
+  user: WebUser | null,
 ): ViewRole[] {
   const views = new Set<ViewRole>()
 
-  user.roles.forEach((role: FWCRole) => {
-    VIEW_MATRIX[role]?.forEach((view) =>
-      views.add(view),
-    )
-  })
+  // 🔒 Hard guard — access logic must never throw
+  if (!user || !Array.isArray(user.roles)) {
+    return ["viewer"]
+  }
+
+  for (const role of user.roles) {
+    const allowed = VIEW_MATRIX[role as FWCRole]
+    if (!allowed) continue
+
+    for (const view of allowed) {
+      views.add(view)
+    }
+  }
 
   return Array.from(views)
 }

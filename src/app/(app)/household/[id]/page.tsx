@@ -1,7 +1,7 @@
 // app/portal/household/[id]/page.tsx
 import Link from 'next/link'
 import styles from './HouseholdPage.module.css'
-import { payloadFetch } from '../../../app/lib/payload'
+import { payloadFetch } from '../../../lib/payload'
 
 type ProfileListItem = {
   id: string

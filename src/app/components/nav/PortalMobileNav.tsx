@@ -4,6 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import styles from "./PortalMobileNav.module.css"
+
 import {
   BookOpen,
   Calendar,
@@ -16,7 +17,7 @@ import {
 
 type NavItem = {
   label: string
-  href: string
+  href?: string
   icon: React.ElementType
   submenu?: { label: string; href: string }[]
 }
@@ -41,16 +42,20 @@ const NAV_ITEMS: NavItem[] = [
 
 export default function PortalMobileNav() {
   const pathname = usePathname()
-  const [openSub, setOpenSub] = useState(false)
+  const [openLabel, setOpenLabel] = useState<string | null>(null)
+
+  const activeItem = NAV_ITEMS.find(
+    (i) =>
+      i.href === pathname ||
+      (i.submenu && pathname.startsWith("/portal/pathways")),
+  )
 
   return (
     <>
-
-
       {/* Submenu */}
-      {openSub && (
+      {activeItem?.submenu && openLabel === activeItem.label && (
         <div className={styles.subMenu}>
-          {NAV_ITEMS.find((i) => i.submenu)?.submenu?.map((sub) => (
+          {activeItem.submenu.map((sub) => (
             <Link key={sub.href} href={sub.href}>
               {sub.label}
             </Link>
@@ -68,21 +73,26 @@ export default function PortalMobileNav() {
               pathname.startsWith("/portal/pathways"))
 
           if (item.submenu) {
+            const isOpen = openLabel === item.label
+
             return (
               <button
                 key={item.label}
                 type="button"
+                aria-expanded={isOpen}
                 className={`${styles.navItem} ${
                   isActive ? styles.active : ""
                 }`}
-                onClick={() => setOpenSub((prev) => !prev)}
+                onClick={() =>
+                  setOpenLabel(isOpen ? null : item.label)
+                }
               >
                 <Icon size={20} />
                 <span>{item.label}</span>
                 <ChevronUp
                   size={14}
                   className={`${styles.chevron} ${
-                    openSub ? styles.open : ""
+                    isOpen ? styles.open : ""
                   }`}
                 />
               </button>
@@ -92,7 +102,7 @@ export default function PortalMobileNav() {
           return (
             <Link
               key={item.label}
-              href={item.href}
+              href={item.href!}
               className={`${styles.navItem} ${
                 isActive ? styles.active : ""
               }`}

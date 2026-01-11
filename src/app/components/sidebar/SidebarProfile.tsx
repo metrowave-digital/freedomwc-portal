@@ -18,11 +18,10 @@ import { useSidebar } from "./useSidebarState"
 ====================================================== */
 
 function getPrimaryRoleLabel(
-  roles: readonly string[] | undefined,
+  roles: readonly string[] | null | undefined,
 ): string {
   if (!roles || roles.length === 0) return "Member"
 
-  // Priority order (highest → lowest)
   const priority: Record<string, string> = {
     admin: "Administrator",
     pastor: "Pastor",
@@ -62,18 +61,12 @@ function getInitials(name: string) {
     .join("")
 }
 
-/**
- * Extract filename from Payload media object
- * "/api/media/file/75-1.jpeg" → "75-1.jpeg"
- */
 function getAvatarFileId(
   avatar: unknown,
 ): string | undefined {
   if (!avatar || typeof avatar !== "object") return undefined
-
   const a = avatar as { url?: unknown }
   if (typeof a.url !== "string") return undefined
-
   return a.url.split("/").pop()
 }
 
@@ -84,7 +77,7 @@ function getAvatarFileId(
 export default function SidebarProfile({
   user,
 }: {
-  user: WebUser
+  user: WebUser | null
 }) {
   const { minimized } = useSidebar()
 
@@ -96,7 +89,8 @@ export default function SidebarProfile({
     string | undefined
   >(undefined)
 
-  const roleLabel = getPrimaryRoleLabel(user.roles)
+  // 🔒 SAFE: handles null user and missing roles
+  const roleLabel = getPrimaryRoleLabel(user?.roles)
 
   /* ======================================================
      Display name resolution (stable)
@@ -104,7 +98,7 @@ export default function SidebarProfile({
 
   const displayName =
     profileName ||
-    getUserDisplayName(user) ||
+    (user ? getUserDisplayName(user) : undefined) ||
     "Member"
 
   const initials = getInitials(displayName)
@@ -144,14 +138,12 @@ export default function SidebarProfile({
 
   return (
     <Link
-      href="/portal/profile"
+      href="/profile"
       className={`${styles.profile} ${
         minimized ? styles.minimized : ""
       }`}
     >
-      {/* Avatar */}
       <div className={styles.avatar}>
-        {/* Initials fallback */}
         <span
           className={`${styles.initials} ${
             imgLoaded ? styles.hidden : ""
@@ -160,7 +152,6 @@ export default function SidebarProfile({
           {initials}
         </span>
 
-        {/* Avatar image (proxied) */}
         {avatarSrc && (
           // eslint-disable-next-line @next/next/no-img-element
           <img

@@ -118,8 +118,13 @@ export function getHighestRole(
 /**
  * Safe display name helper for UI
  */
-export function getUserDisplayName(user: WebUser): string {
+export function getUserDisplayName(
+  user: WebUser | null | undefined,
+): string {
+  if (!user) return "User"
+
   if (user.displayName) return user.displayName
   if (user.firstName) return user.firstName
-  return user.email ?? 'User'
+  return user.email ?? "User"
 }
+
